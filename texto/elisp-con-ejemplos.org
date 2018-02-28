@@ -1,0 +1,67 @@
+#+TITLE: Emacs Lisp con ejemplos
+#+AUTHOR: Patricio Martínez
+#+DATE: <2018-02-27 mar>
+
+* Introducción
+
+  Científicos y humanistas necesitan mejores herramientas.
+Además tenemos que desterrar la idea de que hay que ser programador para poder usar
+herramientas potentes y programables. 
+
+  Emacs puede ser esa herramienta 
+
+Los investigadores también necesitan Emacs. 
+
+* Recordando la nomenclatura de Emacs
+
+* Lo básico en Elisp
+
+Tenemos tres formas de probar el código
+
++ Usando el buffer scratch
++ Creando un fichero .el, con lo que entraremos en el modo elisp y podemos evaluar nuestro código llamando a *eval-last-sexp*, que significa evaluar la última expresión simbólica
++ Creando una entrada interactiva con el comando *ielm* 
+** Imprimiendo en pantalla
+
+Podemos usar por ejemplo *message* 
+
+#+begin_src emacs-lisp
+(message "hola")
+#+end_src
+
+Imprimiendo variables
+
+#+BEGIN_SRC emacs-lisp
+(message "Su edad es: %d" 16) ;; usamos %d para números
+(message "Su nombre es: %s" "Sofia") ;; usamos %s para cadenas de texto
+(message "Mi lista es: %S" (list 8 2 3)) ;; usamos %S para expresiones lisp
+#+END_SRC
+
+Los resultados además de poder verlos en la línea de comandos de *ielm* también aparecerán en el buffer llamado *Messages* 
+
+** Funciones aritméticas
+
+Las funciones aritméticas básicas son las de la mayoría de lenguajes, pero la forma de escribir el orden difiere en algo a la mayoría de éstos. 
+
+#+BEGIN_SRC emacs-lisp
+(+ 5 4 1) ;; => 10
+(- 9 2) ;; => 7
+(- 9 2 3) ;; => 4
+(* 2 3) ;; => 6
+(/ 7 2) ;; => 3
+(/ 7 2.0) ;; => 3.5
+(% 7 4) ;; = 3 (resto)
+(expt 2 3) ;; = 8 (exponencial)
+#+END_SRC
+
+Hay una serie de funciones que sirven si un valor pertenece a un determinado conjunto. Por ejemplo, si un número es entero, o coma flotante. En general la mayoría a estas funciones se les llama *predicados* por lo que par distinguirlos el nombre de la función termina en "*p*". 
+
+Además el resultado de pasar estas funciones a unos valores dados son dos: *t* o *nil* que son dos buleanos que se corresponde con verdadero o falso. Veamos unos ejemplos:
+
+#+BEGIN_SRC emacs-lisp
+;; 3. es un entero y 3.0 es un número con coma flotante
+(integerp 3.) ; nos devolvera t
+(floatp 3.) ; nos devolverá nil
+(floatp 3.0) ; nos devolverá t
+#+END_SRC
+
