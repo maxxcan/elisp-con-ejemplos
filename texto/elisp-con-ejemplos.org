@@ -65,3 +65,224 @@ Además el resultado de pasar estas funciones a unos valores dados son dos: *t* 
 (floatp 3.0) ; nos devolverá t
 #+END_SRC
 
+*** Convirtiendo números a cadenas de texto y viceversa
+
+Eso lo podemos hacer directamente con las siguientes funciones:
+
+#+BEGIN_SRC emacs-lisp
+(string-to-number "3")
+(number-to-string 3)
+#+END_SRC
+
+También podemos hacerlo usando *format*. Ya lo veremos más adelante. 
+
+** Verdadero y falso
+
+En elisp, el símbolo nil es falso, todo lo demás es considerado verdadero. También, nil es equivalente a lista vacía (list()), así también () es falso. Veámoslo con ejemplos:
+
+#+BEGIN_SRC emacs-lisp
+(if nil "si" "no") ;; => "no" 
+(if () "si" "no") ; => "no"
+(if '() "si" "no") ; => "no"
+(if (list) "si" "no") ; => "no"
+#+END_SRC
+
+Por convención, el símbolo *t* es usado para verdadero o true.
+
+#+BEGIN_SRC emacs-lisp
+(if t "si" "no") ; => "si"
+(if 0 "si" "no") ; => "si"
+(if "" "si" "no") ; => "si"
+(if [] "si" "no") ; "si". El [] significa un vector de 0 elementos
+#+END_SRC
+
+En elisp no existe el tipo de dato buleano, solo hay que recordar que nil y lista vacía es falso y lo demás verdadero. 
+
+
+** Funciones buleanas 
+
+Como funciones buleanas tenemos *and* y *or* 
+
+#+BEGIN_SRC emacs-lisp
+(and t nil) ; => nil
+(or t nil) ; => t
+#+END_SRC
+
+*** Comparando números
+
+#+BEGIN_SRC emacs-lisp
+(< 3 4)
+(> 3 4)
+
+(<= 3 4)
+(>= 3 4)
+
+(= 3 3)
+( 3 3.00000001)
+
+(/= 3 4) ; no es igual ; t
+
+#+END_SRC
+
+** Comparando cadenas 
+
+Para comparar cadenas podemos usar el comando *equal* o también el *equal-string* 
+
+Ejemplos:
+
+#+BEGIN_SRC emacs-lisp
+;; comparando cadenas
+(equal "abc" "abc") ; => t
+
+;; función específica para comparar cadenas en elisp
+
+(equal-string "abc" "Abc") ; => nil
+
+;; puede ser usada para comparar cadenas y símbolos 
+(equal-string "abc" 'abc) ;; => t 
+
+#+END_SRC
+
+Para test genéricos usamos *equal*. Equal comprueba si dos valores tienen el mismo valor y tipo de dato.
+
+#+BEGIN_SRC emacs-lisp
+(equal 3 3) ; => t
+(equal 3.0 3.0) ; => t
+(equal 3 3.0) ; => nil . Porque el tipo no es el mismo
+
+;; test de igualdad de una lista
+
+(equal '(3 4 5) '(3 4 5)) ; => t
+(equal '(3 4 5) '(3 5 "5")) ; => nil
+
+;; test de igual de cadenas de texto
+(equal "e" "e") ; => To
+
+;; test de igual dad de símbolos
+(equal 'abc 'abc) ; => t
+
+#+END_SRC
+
+También tenemos la función *eq* que es más específica y comprueba si dos argumentos son el mismo objeto de Lisp. Es una función más usada por los Lisperos de toda la vida. 
+
+
+** Variables  
+
+Por el momento vamos a pensar que en Elisp al igual que en otros lenguajes tenemos variables globales y variables locales. Explicaremos esto más detenidamente más adelante.
+
+*** Variables Globales 
+
+Normalmente en Elisp usamos la función *setq* para establecer variables. Las variables no necesitan ser declaradas y son globales. 
+
+#+BEGIN_SRC emacs-lisp
+(setq x 1) ; asignamos 1 a x
+(setq a 3 b 2 c 7) ; asignamos 3 a a, 2 a b y 7 a c
+#+END_SRC
+
+*** Variables locales 
+
+Para definir una variable local, usamos la función *let*. 
+
+Usamos la forma: 
+
+(let(var1 var2 ...) cuerpo) 
+
+Donde cuerpo es uno (o más) expresiones de lisp. El cuerpo de la última expresión lisp será devuelta. A diferencia de otros lenguajes como Java no es necesario escribir *return* para que esto ocurra ya que lo hace de forma automática.
+
+#+BEGIN_SRC emacs-lisp
+  (let (a b)
+    (setq a 3)
+    (setq b 4)
+    (+ a b) 
+    ) ; devuelve 7
+#+END_SRC
+
+Otra forma de hacerlo es usando la siguiente forma: 
+
+(let((variable1 valor1)(variable2 valor2)...)cuerpo)
+
+Veámoslo en un ejemplo:
+
+#+BEGIN_SRC emacs-lisp
+(let ((a 3) (b 4))
+(+ a b)
+); devuelve 7
+#+END_SRC
+
+Esta forma nos permite establecer valores sin usar *setq* en el cuerpo de la expresión lisp. Esta forma es la más conveniente si tenemos pocas variables con valores conocidos.
+
+** Condicionales 
+
+Veamos las expresiones condicionales en Elisp.
+
+Para hacer un condicional usamos la expresión *if* de la siguiente forma:
+
+(if test cuerpo)
+
+Si queremos añadir una parte *si no*, vamos el típico *else* de las formas condicionales if/else de la mayoría de los lenguajes, solo que en Elisp no se pone la palabra *else* sino que simplemente se escribe la expresión que queremos que se ejecute si no se pudiera ejecutar la primera, de la siguiente forma:
+
+(if test -expresión que se ejecuta si el test da como resultado verdadero- -expresión que se ejecuta si el test da como resultado falso-). 
+
+Como escribir todo esto en español es muy complicado lo veremos mejor con un ejemplo:
+
+#+BEGIN_SRC emacs-lisp
+
+(if (< 3 2) (message "3 es mayor que 2" message "3 es menor que 2")) ; nos dice que el segundo mensaje porque el test da como resultado nil
+(if (> 3 2) (message "3 es mayor que 2" message "3 es menor que 2")) ; nos da el primer mensaje ya que el test da como resultado t
+
+#+END_SRC 
+
+Otro ejemplo sería:
+
+#+BEGIN_SRC emacs-lisp
+(if (< 3 2) 7 8) ; devolverá 8
+#+END_SRC
+
+Si no necesitamos la parte "si no", podemos usar la función *when* en vez de *if* porque es más clara. La forma de usar esta función es la siguiente: 
+
+(when test
+   expresión1
+   expresión2
+...)
+
+Es lo mismo que si usamos:
+
+(if test
+(progn expresión1
+       expresión2
+       ...))
+
+*** Bloques de expresiones 
+ 
+A veces necesitamos agrupar varias expresiones juntas como una sola expresión. Esto puede hacerse con *progn*. 
+
+#+BEGIN_SRC emacs-lisp
+(progn (message "a") (message "b"))
+;; es quivalente a 
+(message "a") (message "b")
+#+END_SRC
+
+El propósito de de *(progn...)* es similar a un bloque de código {...} en lenguajes tipo C. Se usa para agrupar juntos un grupo de expresiones dentro de un sola expresión. La mayor parte de las veces es usado dentro de un *if*. Como por ejemplo: 
+
+#+BEGIN_SRC emacs-lisp
+  (if algo
+      (progn ; verdadero
+        ...)
+    (progn ; si no 
+      ...)
+    )
+#+END_SRC
+
+*progn* devuelve la última expresión en ese cuerpo.
+
+#+BEGIN_SRC emacs-lisp
+(progn 3 4) ; devuelve 4
+#+END_SRC
+
+** Bucles 
+
+Los bucles básicos en Elisp se hacen con *while*. 
+
+(while test cuerpo)
+
+Donde cuerpo son una o más expresiones lisp. 
