@@ -286,3 +286,48 @@ Los bucles básicos en Elisp se hacen con *while*.
 (while test cuerpo)
 
 Donde cuerpo son una o más expresiones lisp. 
+
+Veamos el siguiente ejemplo:
+
+#+BEGIN_SRC emacs-lisp
+  (setq x 0)
+
+  (while (< x 4)
+    (print (format "el número es %d" x))
+  (setq x (1+ x)))
+#+END_SRC
+
+En muchas ocasiones es mejor usar *dolist* o *dotimes*, pero eso lo veremos más adelante.
+
+** Definiendo una función 
+
+La forma básica de definir una función es:
+
+(defun nombre_de_la_función (parámetro1 parámetro2 ...) "documentación de la función" cuerpo)
+
+Ejemplo:
+
+#+BEGIN_SRC emacs-lisp
+  (defun miFuncion ()
+    "prueba"
+    (message "Yayai!"))
+#+END_SRC
+
+Cuando una función es llamada la última expreisón del cuerpo de la función es devuelta. 
+
+*** Definiendo un comando
+
+Un comando es una función que el usuario de Emacs puede llamar con el comando [Alt-x]. 
+
+Cuando una función es también un comando, podemos decir que la función está disponible para uso interactivo. 
+
+Para hacer que una función se disponible para uso interactivo, añadimos *(interactive)* justo después de la documentación de la función. 
+
+Probemos con el siguiente código y veamos que podemos ejecutarlo presionando [Alt-x]
+
+#+BEGIN_SRC emacs-lisp
+  (defun saludo ()
+    "Añade la palabra hola en la posición del cursor"
+    (interactive)
+    (insert "Hola!"))
+#+END_SRC
